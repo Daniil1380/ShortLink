@@ -6,7 +6,8 @@ public class BaseShortener {
     private static final int LENGTH = 7;
 
     public String shorten(String longUrl, UUID userUUID) {
-        String combinedString = longUrl + userUUID.toString();
+        UUID salt = UUID.randomUUID();
+        String combinedString = longUrl + userUUID.toString() + salt;
         int hash = Math.abs(combinedString.hashCode());
         StringBuilder shortKey = new StringBuilder();
         for (int i = 0; i < LENGTH; i++) {
