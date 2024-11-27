@@ -38,13 +38,18 @@ class ShortLink {
         return shortUrl;
     }
 
-    public void redirect() throws IOException, URISyntaxException {
-        if (isValid()) {
-            currentRedirects++;
-            Desktop.getDesktop().browse(new URI(originalUrl));
-        } else {
-            System.out.println("Ссылка недоступна");
-            notifyUser();
+    public void redirect() {
+        try {
+            if (isValid()) {
+                currentRedirects++;
+                Desktop.getDesktop().browse(new URI(originalUrl));
+            } else {
+                System.out.println("Ссылка недоступна");
+                notifyUser();
+            }
+        }
+        catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
         }
     }
 

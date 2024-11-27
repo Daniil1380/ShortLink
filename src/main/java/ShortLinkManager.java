@@ -27,13 +27,15 @@ class ShortLinkManager {
         return shortLink;
     }
 
-    public void redirect(String shortUrl, UUID userUuid) throws IOException, URISyntaxException {
+    public void redirect(String shortUrl, UUID userUuid) {
         validateLinks(userUuid);
-        if (userLinks.containsKey(userUuid) && userLinks.get(userUuid).containsKey(shortUrl)) {
-            userLinks.get(userUuid).get(shortUrl).redirect();
-        } else {
-            System.out.println("Ссылка не найдена");
-        }
+
+        userLinks.entrySet().stream()
+                .flatMap(urls -> urls.getValue().entrySet().stream())
+                .map(Map.Entry::getValue)
+                .filter(url -> url.getShortUrl().equals(shortUrl))
+                .findFirst()
+                .ifPresentOrElse(ShortLink::redirect, () -> System.out.println("Ссылка не найдена"));
     }
 
     public void deleteLink(String shortUrl, UUID userUuid) {
